@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    
+    <!-- Apex Class Access -->
+    <classAccesses>
+        <apexClass>ShadowLWCGridController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>OpportunitySnapshotHandler</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    
+    <custom>false</custom>
+    
+    <!-- Field Permissions for Opty_Sd__c -->
+    <!-- Current Version (0) Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Amount0__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Month0__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Reason0__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Version 1 Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Amount1__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Month1__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Reason1__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Version 2 Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Amount2__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Month2__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Reason2__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Version 3 Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Amount3__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Month3__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Reason3__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Version 4 Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Amount4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Month4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Reason4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Version 5 Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Amount5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Month5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Reason5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- NEW: Period of Performance Field -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.Period_of_Performance__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Updated: Reason for Change Field -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.Reason_for_Change__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Other Custom Fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Start_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Revenue_Month_Formatted__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.Revenue_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Object Permissions -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
+        <object>Opty_Sd__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    
+    <!-- Application Visibility -->
+    <applicationVisibilities>
+        <application>Schedule_Management</application>
+        <default>true</default>
+        <visible>true</visible>
+    </applicationVisibilities>
+    
+    <applicationVisibilities>
+    <application>Default_Console</application>
+    <default>false</default>
+    <visible>true</visible>
+</applicationVisibilities>
+    
+    <!-- Tab Visibility -->
+    <tabVisibilities>
+        <tab>Opty_Sd__c</tab>
+        <visibility>DefaultOff</visibility>
+    </tabVisibilities>
+    
+    <!-- Standard User Permissions (Essential Only) -->
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ApiEnabled</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>AuthorApex</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ConvertLeads</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>CreateCustomizeDashboards</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>CreateCustomizeReports</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>CustomizeApplication</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>EditMyDashboards</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>EditMyReports</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>LightningExperienceUser</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ManageUsers</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ModifyAllData</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ModifyMetadata</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>RunReports</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ViewAllData</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ViewSetup</name>
+    </userPermissions>
+</Profile>

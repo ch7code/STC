@@ -1,0 +1,98 @@
+/* Table layout and column width control */
+.custom-table-width {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.custom-table-width th,
+.custom-table-width td {
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Specific column widths for both headers and cells */
+.custom-table-width th:nth-child(1),
+.custom-table-width td:nth-child(1) {
+    width: 15%;
+    max-width: 100px;
+}
+
+.custom-table-width th:nth-child(2),
+.custom-table-width td:nth-child(2) {
+    width: 20%;
+    max-width: 100px;
+    text-align: center;
+}
+
+.custom-table-width th:nth-child(3),
+.custom-table-width td:nth-child(3) {
+    width: 15%;
+    max-width: 75px;
+    text-align: center;
+}
+
+.custom-table-width th:nth-child(4),
+.custom-table-width td:nth-child(4) {
+    width: 20%;
+    max-width: 75px;
+}
+
+.custom-table-width th:nth-child(5),
+.custom-table-width td:nth-child(5) {
+    width: 30%;
+    max-width: 100px;
+}
+
+/* Compact input styling */
+.compact-input {
+    max-width: 100%;
+}
+
+/* Amount column - make narrower */
+.amount-cell {
+    /* Width handled by nth-child selectors above */
+}
+
+.amount-cell lightning-input {
+    max-width: 100%;
+}
+
+/* Reason column - make narrower */
+.reason-cell {
+    /* Width handled by nth-child selectors above */
+}
+
+.reason-cell lightning-input {
+    max-width: 100%;
+}
+
+/* Delta column styling */
+.delta-cell {
+    /* Width handled by nth-child selectors above */
+    font-weight: 600;
+}
+
+/* Formatted date column */
+.formatted-date-cell {
+    /* Width handled by nth-child selectors above */
+}
+
+/* Version column */
+/* Handled by nth-child selectors above */
+
+/* Force input fields to respect container width */
+lightning-input {
+    display: block;
+    width: 100%;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 768px) {
+    .amount-cell {
+        max-width: 60px;
+    }
+    
+    .reason-cell {
+        max-width: 75px;
+    }
+}

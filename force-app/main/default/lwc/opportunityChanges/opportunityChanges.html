@@ -1,0 +1,46 @@
+<template>
+    <lightning-card title="Opportunity Changes - Last Month" icon-name="standard:opportunity">
+        <div class="slds-card__body slds-card__body_inner">
+            <template if:true={isLoading}>
+                <div class="slds-text-align_center slds-p-around_medium">
+                    <lightning-spinner alternative-text="Loading opportunity changes..." size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Error loading opportunity changes: {error.body.message}</h2>
+                </div>
+            </template>
+
+            <template if:true={hasData}>
+                <div class="slds-p-bottom_small">
+                    <p class="slds-text-body_small slds-text-color_weak">
+                        Showing opportunities that were closed (won/lost) or had dates shifted during the last forecast advance.
+                    </p>
+                </div>
+                <lightning-datatable
+                    key-field="id"
+                    data={opportunityData}
+                    columns={columns}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+            </template>
+
+            <template if:false={hasData}>
+                <template if:false={isLoading}>
+                    <template if:false={error}>
+                        <div class="slds-text-align_center slds-p-around_large">
+                            <lightning-icon icon-name="utility:info" size="large" variant="inverse" class="slds-p-bottom_small"></lightning-icon>
+                            <p class="slds-text-heading_medium">{noDataMessage}</p>
+                            <p class="slds-text-body_small slds-text-color_weak slds-p-top_small">
+                                Advance the forecast to the next month to see opportunity changes here.
+                            </p>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,47 @@
+{
+  "orgName": "Clean Dev Org",
+  "edition": "Developer",
+  "features": [
+    "EnableSetPasswordInApi"
+  ],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true
+    },
+    "chatterSettings": {
+      "enableChatter": false
+    },
+    "omniChannelSettings": {
+      "enableOmniChannel": false
+    },
+    "knowledgeSettings": {
+      "enableKnowledge": false
+    },
+    "forecastingSettings": {
+      "enableForecasts": false
+    },
+    "liveAgentSettings": {
+      "enableLiveAgent": false
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": false
+    }
+  },
+  "objectSettings": {
+    "account": {
+      "sharingModel": "ReadWrite"
+    },
+    "contact": {
+      "sharingModel": "ReadWrite"
+    },
+    "opportunity": {
+      "sharingModel": "ReadWrite"
+    },
+    "lead": {
+      "sharingModel": "ReadWrite"
+    }
+  }
+}

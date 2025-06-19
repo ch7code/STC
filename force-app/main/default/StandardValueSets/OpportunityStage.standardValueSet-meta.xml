@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OpportunityStage</fullName>
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Discovery</fullName>
+        <default>false</default>
+        <probability>10</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Opportunity</fullName>
+        <default>false</default>
+        <probability>20</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Proposal Requested</fullName>
+        <default>false</default>
+        <probability>30</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Proposal Submitted</fullName>
+        <default>false</default>
+        <probability>40</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Proposal Review</fullName>
+        <default>false</default>
+        <probability>50</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Negotiation</fullName>
+        <default>false</default>
+        <probability>70</probability>
+        <forecastCategory>Omitted</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Contract Requested</fullName>
+        <default>false</default>
+        <probability>80</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Contract Sent</fullName>
+        <default>false</default>
+        <probability>90</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Funding Announced</fullName>
+        <default>false</default>
+        <probability>95</probability>
+        <forecastCategory>Omitted</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Won</fullName>
+        <default>false</default>
+        <probability>100</probability>
+        <forecastCategory>Closed</forecastCategory>
+        <closed>true</closed>
+        <won>true</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Lost</fullName>
+        <default>false</default>
+        <probability>0</probability>
+        <forecastCategory>Closed</forecastCategory>
+        <closed>true</closed>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Cold</fullName>
+        <default>false</default>
+        <probability>5</probability>
+        <forecastCategory>Pipeline</forecastCategory>
+        <closed>false</closed>
+        <won>false</won>
+    </standardValue>
+</StandardValueSet>

@@ -1,0 +1,35 @@
+/* shadowLWCGrid.css */
+
+.schedule-grid {
+    border: 1px solid #d9dbdd;
+    border-radius: 0.25rem;
+}
+
+/* Style the version column to highlight current */
+.version-current {
+    font-weight: bold;
+    color: #0176d3;
+    background-color: #f3f9ff;
+}
+
+/* Ensure proper spacing in the data table */
+lightning-datatable {
+    --slds-c-datatable-cell-spacing-block: 0.75rem;
+    --slds-c-datatable-cell-spacing-inline: 1rem;
+}
+
+/* Custom styling for currency amounts */
+.slds-cell-edit .slds-truncate {
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .slds-p-around_medium {
+        padding: 0.5rem;
+    }
+    
+    lightning-datatable {
+        --slds-c-datatable-cell-spacing-inline: 0.5rem;
+    }
+}

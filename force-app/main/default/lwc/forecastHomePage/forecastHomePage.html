@@ -1,0 +1,441 @@
+<!-- forecastHomePage.html -->
+<template>
+    <div class="slds-card slds-p-around_large">
+        <!-- Header -->
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1">
+                <h1 class="slds-text-heading_large slds-m-bottom_medium">
+                    Revenue Forecast Management
+                </h1>
+            </div>
+        </div>
+
+        <!-- Current Month Display -->
+        <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_large">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <div class="slds-box slds-box_small slds-theme_default">
+                    <div class="slds-text-heading_small slds-m-bottom_small">
+                        Current Forecast Month
+                    </div>
+                    <div class="slds-text-heading_medium slds-text-color_default">
+                        {formattedCurrentMonth}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advance Month Button -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <div class="slds-box slds-box_small">
+                    <div class="slds-text-heading_small slds-m-bottom_small">
+                        Month Management
+                    </div>
+                    <lightning-button 
+                        variant="brand" 
+                        label="Advance to Next Month"
+                        title="Advance to Next Month"
+                        onclick={handleAdvanceMonth}
+                        disabled={isButtonDisabled}
+                        class="slds-m-top_small">
+                    </lightning-button>
+                    <template if:false={isAdmin}>
+                        <div class="slds-text-color_error slds-text-body_small slds-m-top_small">
+                            Admin access required
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Generate/Reset Button -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <div class="slds-box slds-box_small">
+                    <div class="slds-text-heading_small slds-m-bottom_small">
+                        Simulation Setup
+                    </div>
+                    <lightning-button 
+                        variant="destructive" 
+                        label="Generate Test Environment"
+                        title="Creates fresh test data and resets to 1/1/2025"
+                        onclick={handleGenerateSimData}
+                        disabled={isButtonDisabled}
+                        class="slds-m-top_small">
+                    </lightning-button>
+                    <template if:false={isAdmin}>
+                        <div class="slds-text-color_error slds-text-body_small slds-m-top_small">
+                            Admin access required
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading...</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Error Display -->
+        <template if:true={error}>
+            <div class="slds-m-top_medium">
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>{error}</h2>
+                </div>
+            </div>
+        </template>
+
+        <!-- Live Dashboard -->
+        <div class="slds-grid slds-wrap slds-gutters slds-m-top_large">
+            <div class="slds-col slds-size_1-of-1">
+                <div class="slds-text-heading_medium slds-m-bottom_medium">
+                    Live Dashboard
+                </div>
+            </div>
+            
+            <!-- Key Metrics Row -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                <div class="slds-box slds-box_small slds-text-align_center">
+                    <div class="slds-text-heading_large slds-text-color_default">
+                        {currentAmount}
+                    </div>
+                    <div class="slds-text-body_small slds-text-color_weak">
+                        Current Month Pipeline
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                <div class="slds-box slds-box_small slds-text-align_center">
+                    <div class="slds-text-heading_large slds-text-color_default">
+                        {totalForwardPipeline}
+                    </div>
+                    <div class="slds-text-body_small slds-text-color_weak">
+                        12-Month Forward Pipeline
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                <div class="slds-box slds-box_small slds-text-align_center">
+                    <div class="slds-text-heading_large slds-text-color_default">
+                        {dashboardData.totalOpportunities}
+                    </div>
+                    <div class="slds-text-body_small slds-text-color_weak">
+                        Total Opportunities
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                <div class="slds-box slds-box_small slds-text-align_center">
+                    <div class="slds-text-heading_large slds-text-color_default">
+                        {dashboardData.totalSnapshots}
+                    </div>
+                    <div class="slds-text-body_small slds-text-color_weak">
+                        Total Snapshots
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historical Trend -->
+            <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                <div class="slds-box slds-box_small">
+                    <div class="slds-text-heading_small slds-m-bottom_medium">
+                        Historical Pipeline Trend - Last 6 Months
+                    </div>
+                    
+                    <!-- Amounts Row -->
+                    <div class="slds-grid slds-wrap slds-m-bottom_small">
+                        <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                            <div class="slds-text-heading_medium slds-text-color_default">{currentAmount}</div>
+                            <div class="slds-text-body_small">Current</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                            <div class="slds-text-heading_medium slds-text-color_default">{previousAmount1}</div>
+                            <div class="slds-text-body_small">Month -1</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                            <div class="slds-text-heading_medium slds-text-color_default">{previousAmount2}</div>
+                            <div class="slds-text-body_small">Month -2</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                            <div class="slds-text-heading_medium slds-text-color_default">{previousAmount3}</div>
+                            <div class="slds-text-body_small">Month -3</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                            <div class="slds-text-heading_medium slds-text-color_default">{previousAmount4}</div>
+                            <div class="slds-text-body_small">Month -4</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                            <div class="slds-text-heading_medium slds-text-color_default">{previousAmount5}</div>
+                            <div class="slds-text-body_small">Month -5</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Delta Row -->
+                    <div class="slds-border_top slds-p-top_small">
+                        <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">
+                            Month-over-Month Change:
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                                <div class={delta1Class}>
+                                    <div class="slds-text-body_regular slds-text-weight_bold">{formattedDelta1}</div>
+                                </div>
+                                <div class="slds-text-body_small slds-text-color_weak">vs Month -1</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                                <div class={delta2Class}>
+                                    <div class="slds-text-body_regular slds-text-weight_bold">{formattedDelta2}</div>
+                                </div>
+                                <div class="slds-text-body_small slds-text-color_weak">vs Month -2</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                                <div class={delta3Class}>
+                                    <div class="slds-text-body_regular slds-text-weight_bold">{formattedDelta3}</div>
+                                </div>
+                                <div class="slds-text-body_small slds-text-color_weak">vs Month -3</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                                <div class={delta4Class}>
+                                    <div class="slds-text-body_regular slds-text-weight_bold">{formattedDelta4}</div>
+                                </div>
+                                <div class="slds-text-body_small slds-text-color_weak">vs Month -4</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                                <div class={delta5Class}>
+                                    <div class="slds-text-body_regular slds-text-weight_bold">{formattedDelta5}</div>
+                                </div>
+                                <div class="slds-text-body_small slds-text-color_weak">vs Month -5</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-text-align_center slds-p-vertical_x-small">
+                                <div class="slds-text-body_small slds-text-color_weak">—</div>
+                                <div class="slds-text-body_small slds-text-color_weak">No comparison</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: 12-Month Forward Pipeline -->
+            <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                <div class="slds-box slds-box_small">
+                    <div class="slds-text-heading_small slds-m-bottom_medium">
+                        12-Month Forward Revenue Pipeline (by Revenue Date)
+                    </div>
+                    
+                    <template if:true={hasForwardData}>
+                        <!-- Forward Pipeline Total -->
+                        <div class="slds-text-align_center slds-m-bottom_medium">
+                            <div class="slds-text-heading_large slds-text-color_success">
+                                {totalForwardPipeline}
+                            </div>
+                            <div class="slds-text-body_small slds-text-color_weak">
+                                Total 12-Month Forward Pipeline
+                            </div>
+                        </div>
+                        
+                        <!-- Monthly Breakdown - Single Row (matching delta row spacing) -->
+                        <div class="slds-grid slds-nowrap slds-gutters_direct slds-scrollable_x">
+                            <template for:each={forwardMonthsDisplay} for:item="month">
+                                <div key={month.label} class="slds-col slds-size_1-of-12 slds-text-align_center slds-p-vertical_x-small">
+                                    <div class="slds-text-heading_small slds-text-color_default">
+                                        {month.amount}
+                                    </div>
+                                    <div class="slds-text-body_small slds-text-color_weak">
+                                        {month.shortLabel}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <!-- Forward Pipeline Notes -->
+                        <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">
+                            Based on Revenue_Date__c field from Opty_Sd records using Amount0__c (current forecast).
+                            Pipeline represents expected revenue recognition by month.
+                        </div>
+                    </template>
+                    
+                    <template if:false={hasForwardData}>
+                        <div class="slds-text-align_center slds-p-vertical_large">
+                            <div class="slds-text-heading_medium slds-text-color_weak">
+                                No Forward Pipeline Data Available
+                            </div>
+                            <div class="slds-text-body_regular slds-text-color_weak slds-m-top_small">
+                                Forward pipeline requires Opty_Sd records with Revenue_Date__c field populated.
+                                Generate simulation data to see forward pipeline in action.
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <!-- NEW: Annual Revenue Section -->
+<div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+    <div class="slds-box slds-box_small">
+        <div class="slds-grid slds-gutters slds-grid_align-spread slds-m-bottom_medium">
+            <div class="slds-col">
+                <div class="slds-text-heading_small">
+                    Annual Revenue Pipeline
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex">
+                <lightning-combobox
+                    name="yearFilter"
+                    label="Year"
+                    value={selectedYear}
+                    placeholder="Select Year"
+                    options={yearOptions}
+                    onchange={handleYearChange}
+                    variant="label-hidden">
+                </lightning-combobox>
+            </div>
+        </div>
+        
+        <template if:true={hasAnnualData}>
+            <!-- Annual Revenue Total -->
+            <div class="slds-text-align_center slds-m-bottom_medium">
+                <div class="slds-text-heading_large slds-text-color_success">
+                    {totalAnnualRevenue}
+                </div>
+                <div class="slds-text-body_small slds-text-color_weak">
+                    Total {selectedYear} Revenue Pipeline
+                </div>
+            </div>
+            
+            <!-- Monthly Breakdown -->
+            <div class="slds-grid slds-nowrap slds-gutters_direct slds-scrollable_x">
+                <template for:each={annualMonthsDisplay} for:item="month">
+                    <div key={month.label} class="slds-col slds-size_1-of-12 slds-text-align_center slds-p-vertical_x-small">
+                        <div class="slds-text-heading_small slds-text-color_default">
+                            {month.amount}
+                        </div>
+                        <div class="slds-text-body_small slds-text-color_weak">
+                            {month.shortLabel}
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <!-- Annual Revenue Notes -->
+            <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">
+                Based on Revenue_Date__c field from Opty_Sd records for {selectedYear}.
+                Shows expected revenue recognition by month for the selected year.
+            </div>
+        </template>
+        
+        <template if:false={hasAnnualData}>
+            <div class="slds-text-align_center slds-p-vertical_large">
+                <div class="slds-text-heading_medium slds-text-color_weak">
+                    No {selectedYear} Revenue Data Available
+                </div>
+                <div class="slds-text-body_regular slds-text-color_weak slds-m-top_small">
+                    Revenue pipeline requires Opty_Sd records with Revenue_Date__c field populated for {selectedYear}.
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+        <!-- Opportunity Changes Section - Always Show for Debugging -->
+        <div class="slds-grid slds-wrap slds-gutters slds-m-top_large">
+            <div class="slds-col slds-size_1-of-1">
+                <div class="slds-box slds-box_small">
+                    <div class="slds-grid slds-gutters slds-grid_align-spread">
+                        <div class="slds-col">
+                            <div class="slds-text-heading_small">
+                                Opportunity Changes (Last Month)
+                            </div>
+                        </div>
+                        <div class="slds-col slds-no-flex">
+                            <lightning-button 
+                                variant="neutral" 
+                                label={changesToggleLabel}
+                                onclick={handleToggleChanges}
+                                size="small">
+                            </lightning-button>
+                        </div>
+                    </div>
+                    
+                        <!-- Enhanced Debug Info -->
+                        <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">
+                            <div>Debug Info:</div>
+                            <div>• Has Changes: {hasOpportunityChanges}</div>
+                            <div>• Changes Count: {opportunityChanges.length}</div>
+                            <div>• Show Dropdown: {showChangesDropdown}</div>
+                            <div>• First Change: {firstChangeDebug}</div>
+                        </div>
+                    
+                    <template if:true={showChangesDropdown}>
+                        <template if:true={hasOpportunityChanges}>
+                            <div class="slds-m-top_small">
+                                <template for:each={opportunityChanges} for:item="change">
+                                    <div key={change.opportunityName} class="slds-border_bottom slds-p-vertical_x-small">
+                                        <div class="slds-grid slds-gutters slds-grid_align-spread">
+                                            <div class="slds-col slds-size_2-of-3">
+                                                <div class="slds-text-body_regular slds-text-weight_bold">
+                                                    {change.changeIcon} {change.opportunityName}
+                                                </div>
+                                                <div class="slds-text-body_small slds-text-color_weak">
+                                                    Stage: {change.stageName} | Reason: {change.reason}
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                                <div class="slds-text-body_regular">
+                                                    Current: {change.currentAmount} | Previous: {change.previousAmount}
+                                                </div>
+                                                <div class="slds-text-body_small slds-text-weight_bold slds-text-color_success">
+                                                    Delta: {change.deltaAmount}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:false={hasOpportunityChanges}>
+                            <div class="slds-m-top_small slds-text-body_regular slds-text-color_weak">
+                                No significant opportunity changes found (changes must be >$1,000).
+                                Try advancing to the next month to generate changes.
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Link Section -->
+        <div class="slds-grid slds-wrap slds-gutters slds-m-top_large">
+            <div class="slds-col slds-size_1-of-1">
+                <div class="slds-text-heading_medium slds-m-bottom_medium">
+                    Reports & Analysis
+                </div>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1">
+                <div class="slds-box slds-box_small">
+                    <div class="slds-text-heading_small slds-m-bottom_small">
+                        Public Reports
+                    </div>
+                    <div class="slds-text-body_regular slds-m-bottom_small">
+                        View your reports for detailed analysis and charts:
+                    </div>
+                    <lightning-button 
+                        variant="neutral" 
+                        label="Open Public Report" 
+                        onclick={handleOpenReport}
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    <div class="slds-text-body_small slds-text-color_weak slds-m-top_small">
+                        Report ID: 00ORL000007vufl2AA
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

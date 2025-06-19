@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Revenue_Month_Formatted__c</fullName>
+    <label>Revenue Month Formatted</label>
+    <type>Text</type>
+<formula>IF(ISBLANK(Revenue_Date__c),"",CASE(MONTH(Revenue_Date__c),1,"January",2,"February",3,"March",4,"April",5,"May",6,"June",7,"July",8,"August",9,"September",10,"October",11,"November",12,"December","") & " " & RIGHT(TEXT(YEAR(Revenue_Date__c)), 2)) &"'"</formula></CustomField>

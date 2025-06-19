@@ -1,0 +1,39 @@
+<!-- advanceMonthButton.html -->
+<template>
+    <div class="slds-box slds-box_small">
+        <!-- Current Month Display -->
+        <div class="slds-m-bottom_small">
+            <span class="slds-text-body_small slds-text-color_weak">
+                {formattedCurrentMonth}
+            </span>
+        </div>
+        
+        <!-- Advance Month Button -->
+        <lightning-button 
+            variant="brand" 
+            label={buttonLabel}
+            title="Advance forecast to next month"
+            onclick={handleAdvanceMonth}
+            disabled={isButtonDisabled}
+            icon-name="utility:forward"
+            class="slds-button_stretch">
+        </lightning-button>
+        
+        <!-- Admin Access Message -->
+        <template if:false={isAdmin}>
+            <div class="slds-text-color_error slds-text-body_small slds-m-top_small slds-text-align_center">
+                Admin access required
+            </div>
+        </template>
+        
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-m-top_small slds-text-align_center">
+                <lightning-spinner 
+                    alternative-text="Processing..." 
+                    size="small">
+                </lightning-spinner>
+            </div>
+        </template>
+    </div>
+</template>

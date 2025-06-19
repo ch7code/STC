@@ -1,0 +1,251 @@
+<template>
+    <lightning-card title="Schedule Data Grid" icon-name="custom:custom70">
+        <div class="slds-p-horizontal_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            
+            <template if:true={hasData}>
+                <!-- Grid Layout: 5 Columns (Version, Month, Delta, Amount, Reason) x 6 Rows (Versions 0-5) -->
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table-width">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="slds-text-title_caps" scope="col" style="width: 15%;">Version</th>
+                            <th class="slds-text-title_caps" scope="col" style="width: 20%;">Month</th>
+                            <th class="slds-text-title_caps" scope="col" style="width: 15%;">Delta</th>
+                            <th class="slds-text-title_caps" scope="col" style="width: 20%;">Amount</th>
+                            <th class="slds-text-title_caps" scope="col" style="width: 30%;">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Version 0 -->
+                        <tr>
+                            <td><strong>Current (0)</strong></td>
+                            <td class="formatted-date-cell">
+                                <span class="slds-text-color_success slds-text-title_caps">
+                                    {getFormattedDate.Month0__c}
+                                </span>
+                            </td>
+                            <td class="delta-cell">
+                                <span class={getDeltaClass.delta0}>
+                                    {getDelta.delta0}
+                                </span>
+                            </td>
+                            <td class="amount-cell">
+                                <lightning-input 
+                                    type="number"
+                                    value={scheduleData.Amount0__c}
+                                    data-field="Amount0__c"
+                                    onchange={handleFieldChange}
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                            <td class="reason-cell">
+                                <lightning-input 
+                                    value={scheduleData.Reason0__c}
+                                    data-field="Reason0__c"
+                                    onchange={handleFieldChange}
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                        
+                        <!-- Version 1 -->
+                        <tr>
+                            <td><strong>Version 1</strong></td>
+                            <td class="formatted-date-cell">
+                                <span class="slds-text-color_success slds-text-title_caps">
+                                    {getFormattedDate.Month1__c}
+                                </span>
+                            </td>
+                            <td class="delta-cell">
+                                <span class={getDeltaClass.delta1}>
+                                    {getDelta.delta1}
+                                </span>
+                            </td>
+                            <td class="amount-cell">
+                                <lightning-input 
+                                    type="number"
+                                    value={scheduleData.Amount1__c}
+                                    data-field="Amount1__c"
+                                    onchange={handleFieldChange}
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                            <td class="reason-cell">
+                                <lightning-input 
+                                    value={scheduleData.Reason1__c}
+                                    data-field="Reason1__c"
+                                    onchange={handleFieldChange}
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                        
+                        <!-- Version 2 -->
+                        <tr>
+                            <td><strong>Version 2</strong></td>
+                            <td class="formatted-date-cell">
+                                <span class="slds-text-color_success slds-text-title_caps">
+                                    {getFormattedDate.Month2__c}
+                                </span>
+                            </td>
+                            <td class="delta-cell">
+                                <span class={getDeltaClass.delta2}>
+                                    {getDelta.delta2}
+                                </span>
+                            </td>
+                            <td class="amount-cell">
+                                <lightning-input 
+                                    type="number"
+                                    value={scheduleData.Amount2__c}
+                                    data-field="Amount2__c"
+                                    onchange={handleFieldChange}
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                            <td class="reason-cell">
+                                <lightning-input 
+                                    value={scheduleData.Reason2__c}
+                                    data-field="Reason2__c"
+                                    onchange={handleFieldChange}
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                        
+                        <!-- Version 3 -->
+                        <tr>
+                            <td><strong>Version 3</strong></td>
+                            <td class="formatted-date-cell">
+                                <span class="slds-text-color_success slds-text-title_caps">
+                                    {getFormattedDate.Month3__c}
+                                </span>
+                            </td>
+                            <td class="delta-cell">
+                                <span class={getDeltaClass.delta3}>
+                                    {getDelta.delta3}
+                                </span>
+                            </td>
+                            <td class="amount-cell">
+                                <lightning-input 
+                                    type="number"
+                                    value={scheduleData.Amount3__c}
+                                    data-field="Amount3__c"
+                                    onchange={handleFieldChange}
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                            <td class="reason-cell">
+                                <lightning-input 
+                                    value={scheduleData.Reason3__c}
+                                    data-field="Reason3__c"
+                                    onchange={handleFieldChange}
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                        
+                        <!-- Version 4 -->
+                        <tr>
+                            <td><strong>Version 4</strong></td>
+                            <td class="formatted-date-cell">
+                                <span class="slds-text-color_success slds-text-title_caps">
+                                    {getFormattedDate.Month4__c}
+                                </span>
+                            </td>
+                            <td class="delta-cell">
+                                <span class={getDeltaClass.delta4}>
+                                    {getDelta.delta4}
+                                </span>
+                            </td>
+                            <td class="amount-cell">
+                                <lightning-input 
+                                    type="number"
+                                    value={scheduleData.Amount4__c}
+                                    data-field="Amount4__c"
+                                    onchange={handleFieldChange}
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                            <td class="reason-cell">
+                                <lightning-input 
+                                    value={scheduleData.Reason4__c}
+                                    data-field="Reason4__c"
+                                    onchange={handleFieldChange}
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                        
+                        <!-- Version 5 -->
+                        <tr>
+                            <td><strong>Version 5</strong></td>
+                            <td class="formatted-date-cell">
+                                <span class="slds-text-color_success slds-text-title_caps">
+                                    {getFormattedDate.Month5__c}
+                                </span>
+                            </td>
+                            <td class="delta-cell">
+                                
+                                    —
+                                
+                            </td>
+                            <td class="amount-cell">
+                                <lightning-input 
+                                    type="number"
+                                    value={scheduleData.Amount5__c}
+                                    data-field="Amount5__c"
+                                    onchange={handleFieldChange}
+                                    formatter="currency"
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                            <td class="reason-cell">
+                                <lightning-input 
+                                    value={scheduleData.Reason5__c}
+                                    data-field="Reason5__c"
+                                    onchange={handleFieldChange}
+                                    variant="label-hidden"
+                                    class="compact-input">
+                                </lightning-input>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="slds-p-top_small slds-text-body_small slds-text-color_weak">
+                    Changes save automatically as you type
+                </div>
+            </template>
+            
+            <template if:false={hasData}>
+                <template if:false={isLoading}>
+                    <div class="slds-text-align_center slds-p-vertical_large">
+                        <lightning-icon icon-name="utility:info" size="large" variant="inverse"></lightning-icon>
+                        <h3 class="slds-text-heading_medium slds-p-top_medium">No Schedule Data Available</h3>
+                        <p class="slds-text-body_regular slds-p-top_small">
+                            This schedule record appears to be empty.
+                        </p>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
