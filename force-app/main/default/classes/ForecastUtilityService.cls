@@ -18,21 +18,45 @@ public with sharing class ForecastUtilityService {
      */
     public static String getCurrentForecastMonth() {
         try {
-            List<Opty_Sd__c> snapshots = [
+            // First check if there's an overriden from ForecastMonthService
+            String overriden = ForecastMonthService.getCurrentForecastMonthoverride();
+            if (String.isNotBlank(overriden)) {
+                return overriden;
+            }
+            
+            // Get all unique Month0__c values
+            List<AggregateResult> monthResults = [
                 SELECT Month0__c 
                 FROM Opty_Sd__c 
                 WHERE Month0__c != null 
-                ORDER BY LastModifiedDate DESC
-                LIMIT 1
+                GROUP BY Month0__c
             ];
             
-            if (!snapshots.isEmpty() && String.isNotBlank(snapshots[0].Month0__c)) {
-                System.debug('Found current forecast month from most recent snapshot: ' + snapshots[0].Month0__c);
-                return snapshots[0].Month0__c;
+            if (monthResults.isEmpty()) {
+                return '1/1/2025';
             }
             
-            System.debug('No snapshots found, defaulting to 1/1/2025');
-            return '1/1/2025';
+            // Parse all months and find the latest
+            Date latestDate = null;
+            String latestMonthStr = null;
+            
+            for (AggregateResult result : monthResults) {
+                String monthStr = (String)result.get('Month0__c');
+                if (String.isNotBlank(monthStr)) {
+                    try {
+                        Date monthDate = parseDateString(monthStr);
+                        if (latestDate == null || monthDate > latestDate) {
+                            latestDate = monthDate;
+                            latestMonthStr = monthStr;
+                        }
+                    } catch (Exception e) {
+                        System.debug('Error parsing month string: ' + monthStr);
+                    }
+                }
+            }
+            
+            return latestMonthStr != null ? latestMonthStr : '1/1/2025';
+            
         } catch (Exception e) {
             System.debug('Error getting current forecast month: ' + e.getMessage());
             return '1/1/2025';
@@ -109,11 +133,6 @@ public with sharing class ForecastUtilityService {
             Integer snapshotsWithRevDate = [SELECT COUNT() FROM Opty_Sd__c WHERE Revenue_Date__c != null];
             Integer snapshotsWithoutRevDate = totalSnapshots - snapshotsWithRevDate;
             
-            System.debug('=== REVENUE DATE DEBUG ===');
-            System.debug('Total Opty_Sd records: ' + totalSnapshots);
-            System.debug('Records WITH Revenue_Date__c: ' + snapshotsWithRevDate);
-            System.debug('Records WITHOUT Revenue_Date__c: ' + snapshotsWithoutRevDate);
-            
             if (snapshotsWithoutRevDate > 0) {
                 List<Opty_Sd__c> sampleNulls = [
                     SELECT Id, Name, Opportunity__r.Name, Opportunity__r.CloseDate, Amount0__c, Revenue_Date__c
@@ -121,11 +140,7 @@ public with sharing class ForecastUtilityService {
                     WHERE Revenue_Date__c = null 
                     LIMIT 5
                 ];
-                System.debug('Sample records with NULL Revenue_Date__c:');
                 for (Opty_Sd__c sample : sampleNulls) {
-                    System.debug('  - ' + sample.Name + ' | Opp: ' + sample.Opportunity__r.Name + 
-                                ' | CloseDate: ' + sample.Opportunity__r.CloseDate + 
-                                ' | Amount0: ' + sample.Amount0__c);
                 }
             }
         } catch (Exception e) {

@@ -1,0 +1,222 @@
+<template>
+    <div class="slds-card compact-dashboard">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">
+                <span>📊 Forecast Dashboard</span>
+            </h2>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+            
+            <!-- ROW 1: Control Row (no header needed) -->
+            <div class="slds-grid slds-gutters dashboard-row">
+                <!-- Current Forecast Month -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card current-month">
+                        <div class="compact-label">Current Month</div>
+                        <div class="compact-value">{currentForecastMonth}</div>
+                    </div>
+                </div>
+
+                <!-- Simulation Controls -->
+                <div class="slds-col slds-size_2-of-12">
+                    <div class="compact-card action-card simulation-card">
+                        <div class="compact-label">Simulation Controls</div>
+                        <div class="button-group-compact">
+                            <lightning-button 
+                                label="Generate" 
+                                onclick={handleGenerateSimulation}
+                                variant="brand"
+                                size="small"
+                                enabled={isLoading}>
+                            </lightning-button>
+                            <lightning-button 
+                                label="Next Month" 
+                                onclick={handleAdvanceMonth}
+                                variant="neutral"
+                                size="small"
+                                enabled={isLoading}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Opportunities -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card metric-card">
+                        <div class="compact-label">Opportunities</div>
+                        <div class="compact-value">{totalOpportunities}</div>
+                    </div>
+                </div>
+
+                <!-- 12M Forward Total -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card forward-card">
+                        <div class="compact-label">12M Forward</div>
+                        <div class="compact-value">{formattedForwardTotal}</div>
+                    </div>
+                </div>
+
+                <!-- Annual Total -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card annual-card">
+                        <div class="compact-label">2025 Annual</div>
+                        <div class="compact-value">{formattedAnnualTotal}</div>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card status-card">
+                        <div class="compact-label">Status</div>
+                        <div class="status-indicator">
+                            <lightning-icon 
+                                icon-name={statusIcon} 
+                                size="small" 
+                                variant={statusVariant}>
+                            </lightning-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Metric 1 -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card metric-card">
+                        <div class="compact-label">Q1 Pipeline</div>
+                        <div class="compact-value">{q1Total}</div>
+                    </div>
+                </div>
+
+                <!-- Additional Metric 2 -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card metric-card">
+                        <div class="compact-label">Q2 Pipeline</div>
+                        <div class="compact-value">{q2Total}</div>
+                    </div>
+                </div>
+                 <!-- Additional Metric 3 -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card metric-card">
+                        <div class="compact-label">Q3 Pipeline</div>
+                        <div class="compact-value">{q3Total}</div>
+                    </div>
+                </div>
+
+                <!-- Additional Metric 4 -->
+                <div class="slds-col slds-size_1-of-12">
+                    <div class="compact-card metric-card">
+                        <div class="compact-label">Q4 Pipeline</div>
+                        <div class="compact-value">{q4Total}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-header">
+                <h3 class="row-title">12 Month Look Ahead</h3>
+            </div>
+            <!-- ROW 2: 12 Month Look Ahead -->
+            <div class="slds-grid slds-gutters dashboard-row">
+                <template for:each={forwardPipelineMonths} for:item="month">
+                    <div key={month.key} class="slds-col slds-size_1-of-12">
+                        <div class="compact-card forward-month-card">
+                            <div class="compact-label">{month.label}</div>
+                            <div class="compact-value">{month.formattedAmount}</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- ROW 3: 2025 Outlook (with year dropdown) -->
+            <div class="row-header-with-controls">
+                <h3 class="row-title">Annual Outlook</h3>
+                <lightning-combobox
+                    name="yearSelector"
+                    label=""
+                    value={selectedYear}
+                    placeholder="Select Year"
+                    options={yearOptions}
+                    onchange={handleYearChange}
+                    variant="label-hidden"
+                    class="year-dropdown">
+                </lightning-combobox>
+            </div>
+            <div class="slds-grid slds-gutters dashboard-row">
+                <template for:each={annualMonths} for:item="month">
+                    <div key={month.key} class="slds-col slds-size_1-of-12">
+                        <div class="compact-card annual-month-card">
+                            <div class="compact-label">{month.label}</div>
+                            <div class="compact-value">{month.formattedAmount}</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- ROW 4: 6 Versions of Change (Historical Snapshots) -->
+            <div class="row-header">
+                <h3 class="row-title">Historical Pipeline Versions (6 Months)</h3>
+            </div>
+            <div class="slds-grid slds-gutters dashboard-row">
+                <template for:each={historicalVersions} for:item="version">
+                    <div key={version.key} class="slds-col slds-size_1-of-12">
+                        <div class="compact-card historical-card">
+                            <div class="compact-label">{version.label}</div>
+                            <div class="compact-value">{version.formattedAmount}</div>
+                        </div>
+                    </div>
+                </template>
+                <!-- Fill remaining columns with placeholders -->
+                <template for:each={historicalPadding} for:item="pad">
+                    <div key={pad.key} class="slds-col slds-size_1-of-12">
+                        <div class="compact-card placeholder-card">
+                            <div class="compact-label">—</div>
+                            <div class="compact-value">—</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- ROW 5: Deltas (Month-over-Month Changes) -->
+            <div class="row-header">
+                <h3 class="row-title">Month-over-Month Deltas</h3>
+            </div>
+            <div class="slds-grid slds-gutters dashboard-row">
+                <template for:each={monthlyDeltas} for:item="delta">
+                    <div key={delta.key} class="slds-col slds-size_1-of-12">
+                        <div class="compact-card delta-card">
+                            <div class="compact-label">{delta.label}</div>
+                            <div class={delta.valueClass}>{delta.formattedDelta}</div>
+                        </div>
+                    </div>
+                </template>
+                <!-- Fill remaining columns -->
+                <template for:each={deltasPadding} for:item="pad">
+                    <div key={pad.key} class="slds-col slds-size_1-of-12">
+                        <div class="compact-card placeholder-card">
+                            <div class="compact-label">—</div>
+                            <div class="compact-value">—</div>
+                        </div>
+                    </div>
+                </template> 
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+    </div>
+
+    <!-- Toast Messages -->
+    <template if:true={showToast}>
+        <div class="slds-notify_container slds-is-relative">
+            <div class={toastClass} role="alert">
+                <span class="slds-assistive-text">{toastVariant}</span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{toastMessage}</h2>
+                </div>
+                <button class="slds-button slds-button_icon slds-notify__close" onclick={hideToast}>
+                    <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                </button>
+            </div>
+        </div>
+    </template>
+</template>

@@ -1,0 +1,220 @@
+<!-- pipelineReconciliation.html -->
+<template>
+    <lightning-card title={cardTitle} icon-name="standard:forecasts">
+        
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-var-p-around_large">
+                <lightning-spinner alternative-text="Loading pipeline reconciliation..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="slds-var-m-around_medium">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Error loading data: {error.body.message}</h2>
+                </div>
+            </div>
+        </template>
+
+        <!-- Main Content -->
+        <template if:false={isLoading}>
+            <template if:false={error}>
+                
+                <!-- Pipeline Summary Header -->
+                <div class="slds-var-m-around_medium">
+                    <div class="slds-grid slds-wrap slds-gutters summary-section">
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="slds-box summary-card previous-pipeline">
+                                <h3 class="summary-label">Previous Pipeline (M1)</h3>
+                                <div class="summary-value">{formattedPreviousTotal}</div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="slds-box summary-card current-pipeline">
+                                <h3 class="summary-label">Current Pipeline (M0)</h3>
+                                <div class="summary-value">{formattedCurrentTotal}</div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="slds-box summary-card net-change">
+                                <h3 class="summary-label">Net Change (M0-M1)</h3>
+                                <div class={netChangeClass}>{formattedNetChange}</div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="slds-box summary-card reconciliation">
+                                <h3 class="summary-label">Reconciliation Check</h3>
+                                <div class={reconciliationClass}>{formattedReconciliation}</div>
+                                <div class="reconciliation-status">
+                                    <lightning-icon icon-name={reconciliationIcon} size="x-small" variant={reconciliationVariant}></lightning-icon>
+                                    <span class="slds-var-m-left_xx-small">{reconciliationStatus}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opportunity Categories - 4 rows of 1 box each -->
+                <div class="slds-var-m-around_medium categories-section">
+                    
+                    <!-- Row 1: Won Opportunities -->
+                    <div class="slds-var-m-bottom_medium">
+                        <div class="category-box won-category">
+                            <div class="category-header">
+                                <div class="category-title">
+                                    <lightning-icon icon-name="utility:success" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                    <h3>Won Opportunities</h3>
+                                </div>
+                                <div class="category-summary">
+                                    <span class="category-count">{wonCount} opportunities</span>
+                                    <span class="category-total">{formattedWonTotal}</span>
+                                    <span class="category-impact">-{formattedWonTotal} pipeline impact</span>
+                                </div>
+                            </div>
+                            <div class="category-content">
+                                <template if:true={hasWonOpportunities}>
+                                    <lightning-datatable
+                                        key-field="opportunity.Id"
+                                        data={wonOpportunities}
+                                        columns={opportunityColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </template>
+                                <template if:false={hasWonOpportunities}>
+                                    <p class="slds-text-color_weak slds-var-p-around_medium">No opportunities won this month</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Lost Opportunities -->
+                    <div class="slds-var-m-bottom_medium">
+                        <div class="category-box lost-category">
+                            <div class="category-header">
+                                <div class="category-title">
+                                    <lightning-icon icon-name="utility:error" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                    <h3>Lost Opportunities</h3>
+                                </div>
+                                <div class="category-summary">
+                                    <span class="category-count">{lostCount} opportunities</span>
+                                    <span class="category-total">{formattedLostTotal}</span>
+                                    <span class="category-impact">-{formattedLostTotal} pipeline impact</span>
+                                </div>
+                            </div>
+                            <div class="category-content">
+                                <template if:true={hasLostOpportunities}>
+                                    <lightning-datatable
+                                        key-field="opportunity.Id"
+                                        data={lostOpportunities}
+                                        columns={opportunityColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </template>
+                                <template if:false={hasLostOpportunities}>
+                                    <p class="slds-text-color_weak slds-var-p-around_medium">No opportunities lost this month</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Created Opportunities -->
+                    <div class="slds-var-m-bottom_medium">
+                        <div class="category-box created-category">
+                            <div class="category-header">
+                                <div class="category-title">
+                                    <lightning-icon icon-name="utility:add" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                    <h3>Created Opportunities</h3>
+                                </div>
+                                <div class="category-summary">
+                                    <span class="category-count">{createdCount} opportunities</span>
+                                    <span class="category-total">{formattedCreatedTotal}</span>
+                                    <span class="category-impact">+{formattedCreatedTotal} pipeline impact</span>
+                                </div>
+                            </div>
+                            <div class="category-content">
+                                <template if:true={hasCreatedOpportunities}>
+                                    <lightning-datatable
+                                        key-field="opportunity.Id"
+                                        data={createdOpportunities}
+                                        columns={opportunityColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </template>
+                                <template if:false={hasCreatedOpportunities}>
+                                    <p class="slds-text-color_weak slds-var-p-around_medium">No opportunities created this month</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Shifted Opportunities -->
+                    <div class="slds-var-m-bottom_medium">
+                        <div class="category-box shifted-category">
+                            <div class="category-header">
+                                <div class="category-title">
+                                    <lightning-icon icon-name="utility:forward" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                    <h3>Shifted Opportunities</h3>
+                                </div>
+                                <div class="category-summary">
+                                    <span class="category-count">{shiftedCount} opportunities</span>
+                                    <span class="category-total">{formattedShiftedTotal}</span>
+                                    <span class="category-impact">$0 pipeline impact</span>
+                                </div>
+                            </div>
+                            <div class="category-content">
+                                <template if:true={hasShiftedOpportunities}>
+                                    <lightning-datatable
+                                        key-field="opportunity.Id"
+                                        data={shiftedOpportunities}
+                                        columns={opportunityColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </template>
+                                <template if:false={hasShiftedOpportunities}>
+                                    <p class="slds-text-color_weak slds-var-p-around_medium">No opportunities shifted this month</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Amount/Stage/POP Changes (if any) -->
+                    <template if:true={hasChangedOpportunities}>
+                        <div class="slds-var-m-bottom_medium">
+                            <div class="category-box changed-category">
+                                <div class="category-header">
+                                    <div class="category-title">
+                                        <lightning-icon icon-name="utility:change_record_type" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        <h3>Amount/Stage/POP Changes</h3>
+                                    </div>
+                                    <div class="category-summary">
+                                        <span class="category-count">{changedCount} opportunities</span>
+                                        <span class="category-total">{formattedChangedTotal}</span>
+                                        <span class={changedImpactClass}>{formattedChangedImpact} pipeline impact</span>
+                                    </div>
+                                </div>
+                                <div class="category-content">
+                                    <lightning-datatable
+                                        key-field="opportunity.Id"
+                                        data={changedOpportunities}
+                                        columns={opportunityColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+
+            </template>
+        </template>
+    </lightning-card>
+</template>

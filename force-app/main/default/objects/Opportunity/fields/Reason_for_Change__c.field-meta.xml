@@ -3,7 +3,7 @@
     <fullName>Reason_for_Change__c</fullName>
     <label>Reason for Change</label>
     <type>Text</type>
-    <length>50</length>
+    <length>255</length>
     <trackFeedHistory>false</trackFeedHistory>
     <trackTrending>false</trackTrending>
 </CustomField>

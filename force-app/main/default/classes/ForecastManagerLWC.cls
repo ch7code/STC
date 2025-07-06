@@ -10,6 +10,7 @@ public with sharing class ForecastManagerLWC {
     
     /**
      * Get current forecast month
+     * REMOVED cacheable=true to prevent stale data on refresh
      */
     @AuraEnabled
     public static String getCurrentForecastMonth() {
@@ -21,7 +22,10 @@ public with sharing class ForecastManagerLWC {
      */
     @AuraEnabled(cacheable=true)
     public static Map<String, Object> getDashboardData() {
-        return ForecastDataService.getDashboardData();
+        Map<String, Object> data = ForecastDataService.getDashboardData();
+        // Include current forecast month in dashboard data
+        data.put('currentForecastMonth', ForecastUtilityService.getCurrentForecastMonth());
+        return data;
     }
     
     /**
@@ -37,7 +41,12 @@ public with sharing class ForecastManagerLWC {
      */
     @AuraEnabled
     public static Map<String, String> advanceToNextMonth() {
-        return ForecastMonthService.advanceToNextMonth();
+        try {
+            // ENHANCED: Use the ForecastMonthService for better month advancement
+            return ForecastMonthService.advanceToNextMonth();
+        } catch (Exception e) {
+            throw new AuraHandledException('Error advancing month: ' + e.getMessage());
+        }
     }
     
     /**

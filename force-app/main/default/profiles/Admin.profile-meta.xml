@@ -3,6 +3,10 @@
     
     <!-- Apex Class Access -->
     <classAccesses>
+        <apexClass>PipelineReconciliationController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ShadowLWCGridController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -10,11 +14,45 @@
         <apexClass>OpportunitySnapshotHandler</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+        <classAccesses>
+        <apexClass>PipelineMathController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     
     <custom>false</custom>
     
     <!-- Field Permissions for Opty_Sd__c -->
     <!-- Current Version (0) Fields -->
+        <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.CloseDate0__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.CloseDate1__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.CloseDate2__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.CloseDate3__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.CloseDate4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opty_Sd__c.CloseDate5__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>Opty_Sd__c.Amount0__c</field>

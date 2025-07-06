@@ -1,0 +1,212 @@
+<!-- pipelineMath.html -->
+<template>
+    <lightning-card title={cardTitle} icon-name="standard:account_insights">
+        
+        <!-- Toggle Button in Card Header -->
+        <div slot="actions">
+            <lightning-button
+                label={toggleLabel}
+                variant={toggleVariant}
+                onclick={handleToggleChange}
+                icon-name="utility:switch"
+                class="toggle-button">
+            </lightning-button>
+        </div>
+        
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-var-p-around_large">
+                <lightning-spinner alternative-text="Loading pipeline math..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="slds-var-m-around_medium">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Error loading data: {error.body.message}</h2>
+                </div>
+            </div>
+        </template>
+
+        <!-- Main Content -->
+        <template if:false={isLoading}>
+            <template if:false={error}>
+                
+                <!-- Math Summary Header -->
+                <div class="slds-var-m-around_medium">
+                    <div class="slds-box math-summary">
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-4">
+                                <div class="summary-metric">
+                                    <h3 class="metric-label">12M Forward (Previous)</h3>
+                                    <div class="metric-value">{formattedPrevious}</div>
+                                    <div class="metric-period">{forwardPeriod}</div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4">
+                                <div class="summary-metric">
+                                    <h3 class="metric-label">12M Forward (Current)</h3>
+                                    <div class="metric-value">{formattedCurrent}</div>
+                                    <div class="metric-period">{forwardPeriod}</div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4">
+                                <div class="summary-metric">
+                                    <h3 class="metric-label">Net Change</h3>
+                                    <div class={changeClass}>{formattedChange}</div>
+                                    <div class="metric-period">12M Forward Delta</div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4">
+                                <div class="summary-metric">
+                                    <h3 class="metric-label">Reconciliation</h3>
+                                    <div class={reconciliationClass}>{formattedReconciliation}</div>
+                                    <div class="reconciliation-status">
+                                        <lightning-icon icon-name={reconciliationIcon} size="x-small" variant={reconciliationVariant}></lightning-icon>
+                                        <span class="slds-var-m-left_xx-small">{reconciliationStatus}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Three Column Layout: Red, Green, Gray -->
+                <div class="slds-var-m-around_medium">
+                    <div class="slds-grid slds-wrap slds-gutters math-categories">
+                        
+                        <!-- RED Column: Negative Impacts -->
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="category-card red-category">
+                                <div class="category-header">
+                                    <div class="category-title">
+                                        <lightning-icon icon-name="utility:remove" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        <h3>Negative Impact</h3>
+                                    </div>
+                                    <div class="category-total red-total">{formattedRedTotal}</div>
+                                </div>
+                                <div class="category-content">
+                                    <template if:true={hasRedItems}>
+                                        <div class="items-list">
+                                            <template for:each={redItems} for:item="item">
+                                                <div key={item.opportunityName} class="math-item red-item">
+                                                    <div class="item-header">
+                                                        <span class="item-name">{item.opportunityName}</span>
+                                                        <span class="item-impact red-impact">{item.formattedImpact}</span>
+                                                    </div>
+                                                    <div class="item-details">
+                                                        <span class="item-account">{item.accountName}</span>
+                                                        <span class="item-amount">{item.formattedAmount}</span>
+                                                    </div>
+                                                    <div class="item-reason">{item.description}</div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template if:false={hasRedItems}>
+                                        <p class="slds-text-color_weak slds-var-p-around_medium">No negative impacts</p>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GREEN Column: Positive Impacts -->
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="category-card green-category">
+                                <div class="category-header">
+                                    <div class="category-title">
+                                        <lightning-icon icon-name="utility:add" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        <h3>Positive Impact</h3>
+                                    </div>
+                                    <div class="category-total green-total">{formattedGreenTotal}</div>
+                                </div>
+                                <div class="category-content">
+                                    <template if:true={hasGreenItems}>
+                                        <div class="items-list">
+                                            <template for:each={greenItems} for:item="item">
+                                                <div key={item.opportunityName} class="math-item green-item">
+                                                    <div class="item-header">
+                                                        <span class="item-name">{item.opportunityName}</span>
+                                                        <span class="item-impact green-impact">{item.formattedImpact}</span>
+                                                    </div>
+                                                    <div class="item-details">
+                                                        <span class="item-account">{item.accountName}</span>
+                                                        <span class="item-amount">{item.formattedAmount}</span>
+                                                    </div>
+                                                    <div class="item-reason">{item.description}</div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template if:false={hasGreenItems}>
+                                        <p class="slds-text-color_weak slds-var-p-around_medium">No positive impacts</p>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GRAY Column: Neutral Impacts -->
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="category-card gray-category">
+                                <div class="category-header">
+                                    <div class="category-title">
+                                        <lightning-icon icon-name="utility:forward" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        <h3>Neutral Impact</h3>
+                                    </div>
+                                    <div class="category-total gray-total">{formattedGrayTotal}</div>
+                                </div>
+                                <div class="category-content">
+                                    <template if:true={hasGrayItems}>
+                                        <div class="items-list">
+                                            <template for:each={grayItems} for:item="item">
+                                                <div key={item.opportunityName} class="math-item gray-item">
+                                                    <div class="item-header">
+                                                        <span class="item-name">{item.opportunityName}</span>
+                                                        <span class="item-impact gray-impact">{item.formattedImpact}</span>
+                                                    </div>
+                                                    <div class="item-details">
+                                                        <span class="item-account">{item.accountName}</span>
+                                                        <span class="item-amount">{item.formattedAmount}</span>
+                                                    </div>
+                                                    <div class="item-reason">{item.description}</div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template if:false={hasGrayItems}>
+                                        <p class="slds-text-color_weak slds-var-p-around_medium">No neutral impacts</p>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Math Equation Footer -->
+                <div class="slds-var-m-around_medium">
+                    <div class="slds-box math-equation">
+                        <h3 class="equation-title">Reconciliation Math</h3>
+                        <div class="equation-content">
+                            <span class="equation-part">{formattedRedTotal}</span>
+                            <span class="equation-operator">+</span>
+                            <span class="equation-part">{formattedGreenTotal}</span>
+                            <span class="equation-operator">+</span>
+                            <span class="equation-part">{formattedGrayTotal}</span>
+                            <span class="equation-operator">=</span>
+                            <span class={reconciliationEquationClass}>{formattedReconciliation}</span>
+                            <span class="equation-operator">≟</span>
+                            <span class={changeEquationClass}>{formattedChange}</span>
+                        </div>
+                        <div class="equation-description">
+                            Individual Changes = 12M Forward Change
+                        </div>
+                    </div>
+                </div>
+
+            </template>
+        </template>
+    </lightning-card>
+</template>

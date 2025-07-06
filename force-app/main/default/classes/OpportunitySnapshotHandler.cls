@@ -2,8 +2,9 @@ public class OpportunitySnapshotHandler {
     
     public static void createOpportunitySnapshots(List<Opportunity> opportunities) {
         List<Opty_Sd__c> snapshotsToInsert = new List<Opty_Sd__c>();
-        String currentMonth = Date.today().toStartOfMonth().format(); // Current version month as string
-        
+        String currentMonth = ForecastMonthService.getCurrentForecastMonthOverride() != null ? 
+        ForecastMonthService.getCurrentForecastMonthOverride() : 
+        ForecastUtilityService.getCurrentForecastMonth();
         for (Opportunity opty : opportunities) {
             // Skip if required fields are missing
             if (opty.CloseDate == null || opty.Amount == null || 
@@ -28,6 +29,7 @@ public class OpportunitySnapshotHandler {
                 snapshot.Opportunity__c = opty.Id;
                 snapshot.Revenue_Date__c = startDate.addMonths(i); // Fixed target date
                 snapshot.Month0__c = currentMonth; // Current version month
+                snapshot.CloseDate0__c = opty.CloseDate;
                 
                 // Apply revenue only during performance period
                 if (i < opty.Period_of_Performance__c) {
@@ -50,7 +52,9 @@ public class OpportunitySnapshotHandler {
     
     public static void updateOpportunitySnapshots(List<Opportunity> opportunities, Map<Id, Opportunity> oldOpportunityMap) {
         Set<Id> opportunityIds = new Set<Id>();
-        String currentMonth = Date.today().toStartOfMonth().format(); // Current version month as string
+        String currentMonth = ForecastMonthService.getCurrentForecastMonthOverride() != null ? 
+        ForecastMonthService.getCurrentForecastMonthOverride() : 
+        ForecastUtilityService.getCurrentForecastMonth();
         
         // Check which opportunities need snapshot updates
         for (Opportunity opty : opportunities) {
@@ -71,7 +75,7 @@ public class OpportunitySnapshotHandler {
             // Get existing snapshots
             Map<Id, List<Opty_Sd__c>> existingSnapshotsByOpty = new Map<Id, List<Opty_Sd__c>>();
             List<Opty_Sd__c> existingSnapshots = [
-                SELECT Id, Opportunity__c, Revenue_Date__c, Month0__c, Amount0__c, Reason0__c
+                SELECT Id, Opportunity__c, Revenue_Date__c, Month0__c, Amount0__c, Reason0__c, CloseDate0__c
                 FROM Opty_Sd__c 
                 WHERE Opportunity__c IN :opportunityIds
                 ORDER BY Opportunity__c, Revenue_Date__c
@@ -146,7 +150,7 @@ public class OpportunitySnapshotHandler {
                             Opty_Sd__c newSnapshot = new Opty_Sd__c();
                             newSnapshot.Opportunity__c = opty.Id;
                             newSnapshot.Revenue_Date__c = startDate.addMonths(i);
-                            newSnapshot.Month0__c = currentMonth;
+newSnapshot.Month0__c = currentMonth;
                             
                             // Apply revenue only during performance period
                             if (i < opty.Period_of_Performance__c) {
@@ -165,7 +169,7 @@ public class OpportunitySnapshotHandler {
                         Opty_Sd__c snapshot = new Opty_Sd__c();
                         snapshot.Opportunity__c = opty.Id;
                         snapshot.Revenue_Date__c = startDate.addMonths(i);
-                        snapshot.Month0__c = currentMonth;
+snapshot.Month0__c = currentMonth;
                         
                         // Apply revenue only during performance period
                         if (i < opty.Period_of_Performance__c) {

@@ -1,0 +1,324 @@
+/* Compact Dashboard Styling */
+.compact-dashboard .slds-card__header {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.compact-dashboard .slds-card__header-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.compact-dashboard .slds-card__body {
+    padding: 0.75rem;
+}
+
+/* Dashboard Rows */
+.dashboard-row {
+    margin-bottom: 0.25rem;
+}
+
+.dashboard-row:last-child {
+    margin-bottom: 0;
+}
+
+/* Row Headers */
+.row-header {
+    margin-bottom: 0.2rem;
+}
+
+.row-header-with-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2rem;
+}
+
+.row-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #181818;
+    margin: 0;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
+
+.year-dropdown {
+    width: 120px;
+}
+
+/* Compact Cards */
+.compact-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 0.5rem;
+    height: 65px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.compact-card:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.compact-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #706e6b;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.compact-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #181818;
+    line-height: 1.2;
+}
+
+/* Row 1 Card Types */
+.current-month {
+    background: linear-gradient(135deg, #1589ee 0%, #0b7ed8 100%);
+    color: white;
+}
+
+.current-month .compact-label,
+.current-month .compact-value {
+    color: white;
+}
+
+.action-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.simulation-card {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+    border-color: #4caf50;
+}
+
+.metric-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.pipeline-card {
+    background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+    border-color: #1589ee;
+}
+
+.trend-card {
+    background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+}
+
+.forward-card {
+    background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
+    border-color: #4caf50;
+}
+
+.annual-card {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+    border-color: #ff9800;
+}
+
+.status-card {
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+}
+
+/* Row 2: Forward Pipeline Cards */
+.forward-month-card {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+    border-color: #4caf50;
+}
+
+/* Row 3: Annual Cards */
+.annual-month-card {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffebc4 100%);
+    border-color: #ff9800;
+}
+
+/* Row 4: Historical Cards */
+.historical-card {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-color: #2196f3;
+}
+
+/* Row 5: Delta Cards */
+.delta-card {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    border-color: #9c27b0;
+}
+
+/* Placeholder Cards */
+.placeholder-card {
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    border-color: #e0e0e0;
+    opacity: 0.5;
+}
+
+/* Trend Colors */
+.trend-positive {
+    color: #4caf50;
+}
+
+.trend-negative {
+    color: #f44336;
+}
+
+/* Compact Button Groups */
+.button-group-compact {
+    display: flex;
+    gap: 0.125rem;
+    margin-top: auto;
+}
+
+.button-group-compact lightning-button {
+    flex: 1;
+    font-size: 1.0 rem;
+}
+
+/* Status Indicator */
+.status-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+}
+
+/* Button Sizing */
+.compact-card lightning-button {
+    font-size: 1 rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Loading States */
+.slds-spinner_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+}
+
+/* Toast Notifications */
+.slds-notify_container {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 9000;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .compact-label {
+        font-size: 0.6rem;
+    }
+    
+    .compact-value {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .slds-col.slds-size_1-of-12 {
+        flex: 0 0 calc(25% - 1rem);
+        max-width: calc(25% - 1rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .slds-col.slds-size_2-of-12 {
+        flex: 0 0 calc(50% - 1rem);
+        max-width: calc(50% - 1rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .compact-card {
+        height: 50px;
+        padding: 0.4rem;
+    }
+    
+    .compact-label {
+        font-size: 0.55rem;
+    }
+    
+    .compact-value {
+        font-size: 0.7rem;
+    }
+    
+    .row-header-with-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .year-dropdown {
+        width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .slds-col.slds-size_1-of-12 {
+        flex: 0 0 calc(50% - 1rem);
+        max-width: calc(50% - 1rem);
+    }
+    
+    .slds-col.slds-size_2-of-12 {
+        flex: 0 0 calc(100% - 1rem);
+        max-width: calc(100% - 1rem);
+    }
+}
+
+/* Focus States */
+.compact-card:focus-within {
+    outline: 2px solid #1589ee;
+    outline-offset: 2px;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.compact-card {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Grid adjustments for 12 columns */
+.slds-col.slds-size_1-of-12 {
+    flex: 0 0 calc(8.333% - 1rem);
+    max-width: calc(8.333% - 1rem);
+}
+
+.slds-col.slds-size_2-of-12 {
+    flex: 0 0 calc(16.666% - 1rem);
+    max-width: calc(16.666% - 1rem);
+}
+
+.dashboard-row {
+    min-height: 20px !important;
+    background: #f0f0f0 !important;
+    margin: 20px 0 !important;
+}
+
+.forward-month-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 65px !important;
+}

@@ -1,0 +1,178 @@
+<!-- opportunityRecap.html - UPDATED WITH CSS CLASSES -->
+<template>
+    <lightning-card title={cardTitle} icon-name="standard:opportunity">     
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="Loading opportunities..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Error Message -->
+        <template if:true={error}>
+            <div class="error-container">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Error loading data: {error.body.message}</h2>
+                </div>
+            </div>
+        </template>
+
+        <!-- Main Content -->
+        <template if:false={isLoading}>
+            <template if:false={error}>
+                
+                <!-- Summary Cards - Updated with custom CSS classes -->
+                <div class="slds-grid slds-wrap slds-var-m-around_medium slds-gutters summary-cards">
+                    
+                    <!-- Won Opportunities Card -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-box slds-text-align_center summary-card won-card">
+                            <h3 class="slds-text-heading_medium slds-text-color_inverse">Opportunities Won</h3>
+                            <div class="slds-text-heading_large slds-text-color_inverse count metric-highlight">{wonCount}</div>
+                            <div class="slds-text-body_regular slds-text-color_inverse amount">{formattedWonAmount}</div>
+                        </div>
+                    </div>
+
+                    <!-- Lost Opportunities Card -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-box slds-text-align_center summary-card lost-card">
+                            <h3 class="slds-text-heading_medium slds-text-color_inverse">Opportunities Lost</h3>
+                            <div class="slds-text-heading_large slds-text-color_inverse count metric-highlight">{lostCount}</div>
+                            <div class="slds-text-body_regular slds-text-color_inverse amount">{formattedLostAmount}</div>
+                        </div>
+                    </div>
+
+                    <!-- Shifted Opportunities Card -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-box slds-text-align_center summary-card shifted-card">
+                            <h3 class="slds-text-heading_medium slds-text-color_inverse">Close Date Shifted</h3>
+                            <div class="slds-text-heading_large slds-text-color_inverse count metric-highlight">{shiftedCount}</div>
+                            <div class="slds-text-body_regular slds-text-color_inverse amount">{formattedShiftedAmount}</div>
+                        </div>
+                    </div>
+
+                    <!-- Created Opportunities Card -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-box slds-text-align_center summary-card created-card">
+                            <h3 class="slds-text-heading_medium slds-text-color_inverse">Opportunities Created</h3>
+                            <div class="slds-text-heading_large slds-text-color_inverse count metric-highlight">{createdCount}</div>
+                            <div class="slds-text-body_regular slds-text-color_inverse amount">{formattedCreatedAmount}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Four Column Layout with enhanced styling -->
+                <div class="slds-grid slds-wrap slds-var-m-around_medium slds-gutters data-section">
+                    
+                    <!-- Won Opportunities Column -->
+                    <div class="slds-col slds-size_1-of-4 data-column">
+                        <template if:true={hasWonOpportunities}>
+                            <div class="slds-card won-section">
+                                <div class="slds-card__header">
+                                    <h3 class="slds-card__header-title slds-text-heading_medium">
+                                        <lightning-icon icon-name="utility:success" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        Won Opportunities
+                                    </h3>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <lightning-datatable
+                                        key-field="Id"
+                                        data={wonOpportunities}
+                                        columns={wonColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Lost Opportunities Column -->
+                    <div class="slds-col slds-size_1-of-4 data-column">
+                        <template if:true={hasLostOpportunities}>
+                            <div class="slds-card lost-section">
+                                <div class="slds-card__header">
+                                    <h3 class="slds-card__header-title slds-text-heading_medium">
+                                        <lightning-icon icon-name="utility:error" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        Lost Opportunities
+                                    </h3>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <lightning-datatable
+                                        key-field="Id"
+                                        data={lostOpportunities}
+                                        columns={lostColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Shifted Opportunities Column -->
+                    <div class="slds-col slds-size_1-of-4 data-column">
+                        <template if:true={hasShiftedOpportunities}>
+                            <div class="slds-card shifted-section">
+                                <div class="slds-card__header">
+                                    <h3 class="slds-card__header-title slds-text-heading_medium">
+                                        <lightning-icon icon-name="utility:warning" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        Close Date Shifted
+                                    </h3>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <lightning-datatable
+                                        key-field="Id"
+                                        data={shiftedOpportunities}
+                                        columns={shiftedColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Created Opportunities Column -->
+                    <div class="slds-col slds-size_1-of-4 data-column">
+                        <template if:true={hasCreatedOpportunities}>
+                            <div class="slds-card created-section">
+                                <div class="slds-card__header">
+                                    <h3 class="slds-card__header-title slds-text-heading_medium">
+                                        <lightning-icon icon-name="utility:add" size="small" class="slds-var-m-right_x-small"></lightning-icon>
+                                        Created Opportunities
+                                    </h3>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <lightning-datatable
+                                        key-field="Id"
+                                        data={createdOpportunities}
+                                        columns={createdColumns}
+                                        hide-checkbox-column="true"
+                                        show-row-number-column="false">
+                                    </lightning-datatable>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- No Data Message -->
+                <template if:false={hasWonOpportunities}>
+                    <template if:false={hasLostOpportunities}>
+                        <template if:false={hasShiftedOpportunities}>
+                            <template if:false={hasCreatedOpportunities}>
+                                <div class="no-data-container">
+                                    <lightning-icon icon-name="utility:info" size="medium"></lightning-icon>
+                                    <p class="slds-var-m-top_small">{noDataMessage}</p>
+                                </div>
+                            </template>
+                        </template>
+                    </template>
+                </template>
+
+            </template>
+        </template>
+    </lightning-card>
+</template>

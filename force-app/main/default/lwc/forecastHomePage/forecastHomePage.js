@@ -9,7 +9,7 @@ import generateSimulationData from '@salesforce/apex/ForecastManagerLWC.generate
 import resetToJanuary2025 from '@salesforce/apex/ForecastManagerLWC.resetToJanuary2025';
 import cleanupSimulationData from '@salesforce/apex/ForecastManagerLWC.cleanupSimulationData';
 import { wire } from 'lwc';
-import getAnnualRevenueData from '@salesforce/apex/ForecastDataService.getAnnualRevenueData';
+import getAnnualRevenueData from '@salesaforce/apex/ForecastDataService.getAnnualRevenueData';
 
 export default class ForecastHomePage extends LightningElement {
     @track currentMonth = '';
