@@ -385,4 +385,4 @@ public with sharing class PipelineMathController {
         public Boolean hasDateShift = false;
         public Boolean isDateShiftOnly = false;
     }
-}n
+}
